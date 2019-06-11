@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="w-100 h-100" lang="en">
+    <head>
+        <title>XboxReplay — Sample project</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body class="w-100 h-100 pt-4">
+        <div class="d-flex justify-content-center align-items-center w-100">
+            <div class="form-wrapper">
+                <h1>@xboxreplay</h1>
+                <small><strong>> Sample project</strong></small>
+                <hr />
+                <form id="form" method="POST">
+                    <div class="form-group">
+                        <input id="gamertag" class="form-control" type="text" placeholder="Gamertag" required />
+                    </div>
+                    <div class="form-group">
+                        <select id="type" class="form-control">
+                            <option value="settings">Settings</option>
+                            <option value="screenshots">Screenshots</option>
+                            <option value="gameclips">Gameclips</option>
+                        </select>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div id="response" class="d-flex justify-content-center align-items-center w-100 pt-4"></div>
+    </body>
+    <script>
+        (() => {
+            let fetching = false;
+
+            const onResponse = (type, response) => {
+                let HTMLElement = '';
+
+                switch (type) {
+                    case 'settings':
+                        HTMLElement = `
+                            <img class="mr-2" src="${response.find(r => r.id === 'GameDisplayPicRaw').value}" style="width: 120px; height: 120px; border-radius: 50%;" />
+                            <div class="ml-2">
+                                <strong>Gamertag:</strong> ${response.find(r => r.id === 'Gamertag').value}
+                                <br />
+                                <strong>Gamerscore:</strong> ${response.find(r => r.id === 'Gamerscore').value}
+                            </div>
+                        `;
+                        break;
+                    case 'screenshots':
+                    case 'gameclips':
+                        const cards = [];
+                        const key = type === 'gameclips' ? 'gameClips' : type;
+
+                        response[key].forEach(elem => {
+                            const link = key === 'screenshots'
+                                ? `<a class="btn btn-primary" href="${elem.screenshotUris[0].uri}" target="_blank">Download</a>`
+                                : `<a class="btn btn-primary" href="${elem.gameClipUris[0].uri}" target="_blank">Play</a>`;
+
+                            cards.push(`
+                                <div class="col-sm-3">
+                                    <div class="card mb-4">
+                                        <img class="card-img-top" src="${elem.thumbnails[0].uri}" />
+                                        <div class="card-body">
+                                            <h5 class="card-title">${elem.titleName}</h5>
+                                            <p class="card-text">Captured: ${new Date(elem.dateTaken || elem.dateRecorded).toLocaleDateString()}</p>
+                                            ${link}
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+
+                        HTMLElement = `
+                            <div class="container">
+                                <div class="row">
+                                    ${cards.join('')}
+                                </div>
+                            </div>
+                        `;
+
+                        break;
+                    default:
+                        return;
+                }
+
+                document.getElementById('response').innerHTML = HTMLElement;
+            }
+
+            const onSubmit = event => {
+                event && event.preventDefault();
+
+                if (fetching === true) {
+                    return;
+                } else fetching = true;
+
+                const gamertag = document.getElementById('gamertag').value;
+                const type = document.getElementById('type');
+                const selected = type.options[type.selectedIndex].value;
+
+                fetch(`/api/${selected}?gamertag=${gamertag}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json().then(data => onResponse(selected, data));
+                    } else throw new Error(`Error - Invalid HTTP Status code (${response.status}).`);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert(err.message);
+                })
+                .finally(() => {
+                    fetching = false;
+                });
+            };
+
+            document.getElementById('form')
+                .addEventListener('submit', onSubmit);
+        })();
+
+    </script>
+</html>

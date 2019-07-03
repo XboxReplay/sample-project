@@ -5,7 +5,7 @@ import credentials from '../config/credentials';
 
 // **** TYPINGS **** //
 
-type StoreResponse = XboxLiveAuth.IAuthUserResponse | undefined;
+type StoreResponse = XboxLiveAuth.AuthUserResponse | undefined;
 
 // **** PUBLIC METHODS **** //
 

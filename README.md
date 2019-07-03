@@ -4,7 +4,7 @@
 
 ### Installation
 ```
-$ git clone git@github.com:XboxReplay/sample-project.git
+$ git clone https://github.com/XboxReplay/sample-project.git
 $ cd sample-project
 $ npm install
 ```

@@ -32,7 +32,9 @@
         (() => {
             let fetching = false;
 
-            const onResponse = (type, response) => {
+            const typeToKey = type => type === 'gameclips' ? 'gameClips' : 'screenshots';
+
+            const onResponse = (gamertag, type, response) => {
                 let HTMLElement = '';
 
                 switch (type) {
@@ -49,7 +51,7 @@
                     case 'screenshots':
                     case 'gameclips':
                         const cards = [];
-                        const key = type === 'gameclips' ? 'gameClips' : type;
+                        const key = typeToKey(type);
 
                         response[key].forEach(elem => {
                             const link = key === 'screenshots'
@@ -70,11 +72,28 @@
                             `);
                         });
 
+                        const HTMLLoadMore = `
+                            <div class="row">
+                                <div class="col-12 mb-4">
+                                    <button id="load-more" type="button" class="btn btn-primary">
+                                        <span>Load more</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `
+
+                        const next =
+                            response.pagingInfo !== void 0 &&
+                            response.pagingInfo.continuationToken !== null
+                                ? HTMLLoadMore
+                                : '';
+
                         HTMLElement = `
                             <div class="container">
                                 <div class="row">
                                     ${cards.join('')}
                                 </div>
+                                ${next}
                             </div>
                         `;
 
@@ -84,6 +103,13 @@
                 }
 
                 document.getElementById('response').innerHTML = HTMLElement;
+                const more = document.getElementById('load-more');
+
+                if (more !== null) {
+                    more.addEventListener('click', () => {
+                        onLoadMoreElements(gamertag, type, response);
+                    });
+                }
             }
 
             const onSubmit = event => {
@@ -100,7 +126,7 @@
                 fetch(`/api/${selected}?gamertag=${gamertag}`)
                 .then(response => {
                     if (response.status === 200) {
-                        return response.json().then(data => onResponse(selected, data));
+                        return response.json().then(data => onResponse(gamertag, selected, data));
                     } else throw new Error(`Error - Invalid HTTP Status code (${response.status}).`);
                 })
                 .catch(err => {
@@ -111,6 +137,32 @@
                     fetching = false;
                 });
             };
+
+            const onLoadMoreElements = (gamertag, type, previousResponse) => {
+                if (fetching === true) {
+                    return;
+                } else fetching = true;
+
+                const continuationToken = previousResponse.pagingInfo.continuationToken;
+
+                fetch(`/api/${type}?gamertag=${gamertag}&continuation-token=${continuationToken}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json().then(data => {
+                            const key = typeToKey(type);
+                            data[key].unshift(...previousResponse[key]);
+                            return onResponse(gamertag, type, data);
+                        });
+                    } else throw new Error(`Error - Invalid HTTP Status code (${response.status}).`);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert(err.message);
+                })
+                .finally(() => {
+                    fetching = false;
+                });
+            }
 
             document.getElementById('form')
                 .addEventListener('submit', onSubmit);

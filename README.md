@@ -7,6 +7,7 @@
 A live demo is available [here](https://sample-project-demo.xboxreplay.now.sh).
 
 ### Installation
+
 ```bash
 $ git clone https://github.com/XboxReplay/sample-project.git
 $ cd sample-project
@@ -14,9 +15,10 @@ $ npm install
 ```
 
 ### Start
+
 ```bash
-$ XBL_EMAIL=user@live.com \
-  XBL_PASSWORD=password \
+$ XBL_EMAIL=xbl-account@domain.com \
+  XBL_PASSWORD=********* \
   npm start
 ```
 

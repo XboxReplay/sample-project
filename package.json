@@ -20,7 +20,7 @@
     "scripts": {
         "build": "npm run clean && ./node_modules/.bin/tsc",
         "clean": "rm -rf ./dist",
-        "serve": "XBL_EMAIL=${XBL_EMAIL} XBL_PASSWORD=${XBL_PASSWORD} node ./index.js",
+        "serve": "HOST=${HOST} PORT=${PORT} XBL_EMAIL=${XBL_EMAIL} XBL_PASSWORD=${XBL_PASSWORD} node ./index.js",
         "start": "npm run build && npm run serve",
         "now-build": "npm run build",
         "test": "echo \"No tests specified\""

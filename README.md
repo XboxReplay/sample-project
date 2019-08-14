@@ -22,13 +22,13 @@ $ XBL_EMAIL=xbl-account@domain.com \
   npm start
 ```
 
-### Packages
-* [@xboxreplay/express-ugc-proxy](https://github.com/XboxReplay/express-ugc-proxy)
-* [@xboxreplay/xboxlive-auth](https://github.com/XboxReplay/xboxlive-auth)
-* [@xboxreplay/xboxlive-api](https://github.com/XboxReplay/xboxlive-api)
-
 ### Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
 ```bash
 now
 ```
+
+### Packages
+* [@xboxreplay/express-ugc-proxy](https://github.com/XboxReplay/express-ugc-proxy)
+* [@xboxreplay/xboxlive-auth](https://github.com/XboxReplay/xboxlive-auth)
+* [@xboxreplay/xboxlive-api](https://github.com/XboxReplay/xboxlive-api)

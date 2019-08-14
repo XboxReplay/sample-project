@@ -17,5 +17,6 @@ $ XBL_EMAIL=user@live.com \
 ```
 
 ### Packages
+* [@xboxreplay/express-ugc-proxy](https://github.com/XboxReplay/express-ugc-proxy)
 * [@xboxreplay/xboxlive-auth](https://github.com/XboxReplay/xboxlive-auth)
 * [@xboxreplay/xboxlive-api](https://github.com/XboxReplay/xboxlive-api)

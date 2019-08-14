@@ -54,9 +54,25 @@
                         const key = typeToKey(type);
 
                         response[key].forEach(elem => {
+                            const parameters = {
+                                type: type,
+                                xuid: elem.xuid,
+                                scid: elem.scid,
+                                id: key === 'screenshots'
+                                    ? elem.screenshotId
+                                    : elem.gameClipId
+                            };
+
+                            const fileProxyUri = window.location.protocol + '//' + window.location.host + '/ugc-files/' + [
+                                parameters.type,
+                                parameters.xuid,
+                                parameters.scid,
+                                parameters.id
+                            ].join('/');
+
                             const link = key === 'screenshots'
-                                ? `<a class="btn btn-primary" href="${elem.screenshotUris[0].uri}" target="_blank">Download</a>`
-                                : `<a class="btn btn-primary" href="${elem.gameClipUris[0].uri}" target="_blank">Play</a>`;
+                                ? `<a class="btn btn-primary" href="${fileProxyUri}/screenshot.png" target="_blank">Download</a>`
+                                : `<a class="btn btn-primary" href="${fileProxyUri}/gameclip.mp4" target="_blank">Play</a>`;
 
                             cards.push(`
                                 <div class="col-sm-3">

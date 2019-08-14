@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as UGCMiddleware from '@xboxreplay/express-ugc-proxy';
 import { resolve } from 'path';
 
 // **** MIDDLEWARES **** //
@@ -10,12 +11,25 @@ import playerSettingsMiddleware from './middlewares/player-settings';
 import playerScreenshotsMiddleware from './middlewares/player-screenshots';
 import playerGameclipsMiddleware from './middlewares/player-gameclips';
 
+// **** MODULES **** //
+
+import { getOrResolveXBLAuthorization } from './modules/xbl-authorization';
+
 // **** EXPRESS **** //
 
 const app = express();
 const api = express();
 
 app.use('/', XPoweredByMiddleware());
+
+app.use(
+	'/ugc-files',
+	UGCMiddleware.handle(getOrResolveXBLAuthorization, {
+		debug: true,
+		redirectOnFetch: false
+	})
+);
+
 api.use('/', XPoweredByMiddleware());
 app.use('/static', express.static(resolve(__dirname, '..', 'public')));
 

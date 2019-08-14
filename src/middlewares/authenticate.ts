@@ -1,12 +1,12 @@
 import * as express from 'express';
-import { getOrResolveXBLAuthorization } from '../modules/xbl-authorization';
+import XBLAuthenticateMethod from '../modules/authenticate';
 
 export default () => (
 	req: express.Request,
 	res: express.Response,
 	next: express.NextFunction
 ) =>
-	getOrResolveXBLAuthorization()
+	XBLAuthenticateMethod()
 		.then(response => {
 			req.authorization = response;
 			return next();

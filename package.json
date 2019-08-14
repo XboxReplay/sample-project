@@ -1,7 +1,7 @@
 {
     "name": "@xboxreplay/sample-project",
-    "description": "Usage examples of \"@xboxreplay/xboxlive-auth\" and \"@xboxreplay/xboxlive-api\" packages",
-    "version": "1.0.0",
+    "description": "Usage examples of \"@xboxreplay/express-ugc-proxy\", \"@xboxreplay/xboxlive-auth\" and \"@xboxreplay/xboxlive-api\" packages",
+    "version": "1.1.0",
     "keywords": [
         "xboxreplay",
         "xboxlive",
@@ -12,16 +12,18 @@
         "url": "https://github.com/XboxReplay/sample-project"
     },
     "license": "MIT",
-    "main": "./dist/index.js",
+    "main": "./index.js",
     "author": {
         "name": "Alexis Bize",
         "email": "alexis.bize@gmail.com"
     },
     "scripts": {
-        "start": "npm run serve",
         "build": "npm run clean && ./node_modules/.bin/tsc",
         "clean": "rm -rf ./dist",
-        "serve": "npm run build && XBL_EMAIL=${XBL_EMAIL} XBL_PASSWORD=${XBL_PASSWORD} node ./dist/index.js"
+        "serve": "XBL_EMAIL=${XBL_EMAIL} XBL_PASSWORD=${XBL_PASSWORD} node ./index.js",
+        "start": "npm run build && npm run serve",
+        "now-build": "npm run build",
+        "test": "echo \"No tests specified\""
     },
     "dependencies": {
         "@xboxreplay/express-ugc-proxy": "^0.2.0",

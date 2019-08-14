@@ -1,14 +1,10 @@
 import * as XboxLiveAuth from '@xboxreplay/xboxlive-auth';
-import { getFromStore, setToStore } from '../modules/memory-store';
+import { getFromStore, setToStore } from './memory-store';
 import credentials from '../config/credentials';
-
-// **** TYPINGS **** //
 
 type StoreResponse = XboxLiveAuth.AuthUserResponse | undefined;
 
-// **** PUBLIC METHODS **** //
-
-export const getOrResolveXBLAuthorization = async () => {
+export default async () => {
 	const authorization = getFromStore<StoreResponse>('xboxlive-authorization');
 
 	if (authorization !== void 0) {
